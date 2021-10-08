@@ -1,6 +1,4 @@
-import bytecode.ConstantPoolEntry
-import bytecode.Instruction
-import bytecode.OpCode
+import bytecode.*
 import dev.BytecodeFile
 import dev.OutputReader
 import dev.OutputWriter
@@ -18,7 +16,7 @@ fun main(args: Array<String>) {
 
     val vm = VM(bytecodeFile.instructions, bytecodeFile.constantPool)
 
-    while(!vm.isHalted()) {
+    while (!vm.isHalted()) {
         vm.execute(vm.fetchInstruction())
     }
 
@@ -26,11 +24,11 @@ fun main(args: Array<String>) {
 }
 
 fun writeSimpleProgram() {
-    val constantPool = emptyList<ConstantPoolEntry>()
+    val constantPool = mutableListOf<ConstantPoolEntry>()
     val instructions = mutableListOf<Instruction>()
 
-    instructions.add(Instruction(OpCode.OP_ILOAD, src1 = 32, dst = 0))
-    instructions.add(Instruction(OpCode.OP_ILOAD, src1 = 8, dst = 1))
+    instructions.add(Instruction(OpCode.OP_ICONST, src1 = 0, src2 = 32, dst = 0))
+    instructions.add(Instruction(OpCode.OP_ICONST, src1 = 0, src2 = 8, dst = 1))
     instructions.add(Instruction(OpCode.OP_IADD, src1 = 0, src2 = 1, dst = 1))
     instructions.add(Instruction(OpCode.OP_PRINT, src1 = 1))
     instructions.add(Instruction(OpCode.OP_HALT))

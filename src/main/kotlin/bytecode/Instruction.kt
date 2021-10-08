@@ -5,6 +5,7 @@ import utils.toByteArray
 enum class OpCode {
     OP_CALL,
     OP_RETURN,
+    OP_ICONST,
     OP_ILOAD,
     OP_IADD,
     OP_PRINT,

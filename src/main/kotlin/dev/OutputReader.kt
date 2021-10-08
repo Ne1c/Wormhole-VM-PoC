@@ -29,22 +29,22 @@ object OutputReader {
 
             when (type) {
                 ConstantPoolEntry.Type.INT -> {
-                    constantPool.add(IntEntry.of(navigator.readNextBytes(INT_32_BITS_ARRAY_SIZE)))
-                }
-                ConstantPoolEntry.Type.DOUBLE -> {
-                    constantPool.add(DoubleEntry.of(navigator.readNextBytes(INT_32_BITS_ARRAY_SIZE)))
+                    constantPool.add(IntEntry.of(navigator.readNextBytes(IntEntry.SIZE_IN_BYTES)))
                 }
                 ConstantPoolEntry.Type.STRING -> {
                     val length = navigator.readNextByte().toInt()
 
                     constantPool.add(StringEntry.of(length, navigator.readNextBytes(length)))
                 }
+                ConstantPoolEntry.Type.FUNCTION -> {
+                    constantPool.add(FunctionEntry.of(navigator.readNextBytes(FunctionEntry.SIZE_IN_BYTES)))
+                }
             }
         }
 
         val instruction = mutableListOf<Instruction>()
 
-        while(!navigator.isEnd()) {
+        while (!navigator.isEnd()) {
             val instrWord = navigator.readNextBytes(INT_32_BITS_ARRAY_SIZE)
 
             instruction.add(Instruction.of(instrWord))

@@ -5,6 +5,11 @@ const val INT_16_BITS_ARRAY_SIZE = 2
 const val INT_24_BITS_ARRAY_SIZE = 3
 const val INT_32_BITS_ARRAY_SIZE = 4
 
+typealias U1 = Int
+typealias U2 = Int
+typealias U3 = Int
+typealias U4 = Int
+
 fun Int.toByteArray(length: Int = INT_32_BITS_ARRAY_SIZE): ByteArray {
     val byteArray = ByteArray(length)
 
@@ -13,6 +18,17 @@ fun Int.toByteArray(length: Int = INT_32_BITS_ARRAY_SIZE): ByteArray {
     }
 
     return byteArray
+}
+
+fun ByteArray.toInt(): Int {
+    val lastIndex = size - 1
+    var result = 0
+
+    for ((i, j) in (lastIndex downTo 0).withIndex()) {
+        result = result or ((this[i].toInt() and 0xFF) shl (8 * j))
+    }
+
+    return result
 }
 
 class ByteArrayNavigator(private val byteArray: ByteArray) {
