@@ -3,3 +3,9 @@
 /.gradle
 gradlew
 gradlew.bat
+hypervisor/build/
+hypervisor_api/build
+vm/build/
+out/
+*.o
+*.log

@@ -1,4 +1,7 @@
 import wh.hypervisor.api.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
 import java.net.ServerSocket
 import java.net.Socket
 
@@ -24,6 +27,13 @@ const val SYNC_CMD = "sync"
 class VMInstance(val process: Process, val socketPort: Int)
 
 fun main(args: Array<String>) {
+    Runtime.getRuntime().exec("pwd").run {
+        waitFor()
+
+        val runningIn = BufferedReader(InputStreamReader(inputStream)).readLine()
+        println("Running in $runningIn")
+    }
+
     val vms = mutableListOf<VMInstance>()
 
     while (true) {
@@ -35,7 +45,19 @@ fun main(args: Array<String>) {
                 val path = command[1]
                 val socketPort = getFreePort()
 
-                val process = ProcessBuilder("./VM", path, socketPort.toString()).start()
+                val logFile = File("process_${vms.size + 1}.log")
+                logFile.delete()
+                logFile.createNewFile()
+
+                val process = ProcessBuilder(
+                    "java",
+                    "-jar",
+                    "out/artifacts/Wormhole_VM_vm_main_jar/Wormhole_VM.vm.main.jar",
+                    path,
+                    socketPort.toString()
+                ).redirectOutput(logFile)
+                    .redirectError(logFile)
+                    .start()
 
                 vms.add(VMInstance(process, socketPort))
 
@@ -65,7 +87,8 @@ fun main(args: Array<String>) {
 
                 whomWriter.write(RequestSyncCommand())
 
-                while(reader.read(whomSocket.getInputStream())) {}
+                while (reader.read(whomSocket.getInputStream())) {
+                }
 
                 val dataResponse = reader.parse() as SyncDataResponse
 

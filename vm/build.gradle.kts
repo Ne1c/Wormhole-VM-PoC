@@ -18,5 +18,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("VM")
+    mainClass.set("VMMainKt")
 }

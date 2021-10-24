@@ -1,0 +1,1 @@
+java -jar out/artifacts/Wormhole_VM_hypervisor_main_jar/Wormhole_VM.hypervisor.main.jar

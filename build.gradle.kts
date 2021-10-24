@@ -13,6 +13,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":vm"))
+    implementation(project(":hypervisor_api"))
     testImplementation(kotlin("test"))
 }
 
