@@ -1,7 +1,7 @@
-package dev
+package wh.vm.dev
 
-import bytecode.ConstantPoolEntry
-import bytecode.Instruction
+import wh.vm.bytecode.ConstantPoolEntry
+import wh.vm.bytecode.Instruction
 
 data class BytecodeFile(
     val name: String,

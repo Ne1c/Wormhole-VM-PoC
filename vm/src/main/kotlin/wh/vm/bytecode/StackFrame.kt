@@ -1,4 +1,4 @@
-package bytecode
+package wh.vm.bytecode
 
 import kotlinx.serialization.Serializable
 

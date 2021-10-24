@@ -1,4 +1,4 @@
-package bytecode
+package wh.vm.bytecode
 
 import wh.hypervisor.api.utils.toByteArray
 

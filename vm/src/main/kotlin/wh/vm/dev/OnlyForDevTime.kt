@@ -1,3 +1,3 @@
-package dev
+package wh.vm.dev
 
 annotation class OnlyForDevTime

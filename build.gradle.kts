@@ -2,11 +2,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.10"
-    kotlin("plugin.serialization") version "1.5.31"
     application
 }
 
-group = "me.nikolay"
+group = "wh.vm"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -14,7 +13,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
     testImplementation(kotlin("test"))
 }
 

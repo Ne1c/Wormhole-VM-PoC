@@ -1,7 +1,5 @@
-package vm
+package wh.vm.vm
 
-import bytecode.*
-import bytecode.Function
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -12,6 +10,8 @@ import wh.hypervisor.api.HypervisorService
 import wh.hypervisor.api.RequestSyncCommand
 import wh.hypervisor.api.SyncDataResponse
 import wh.hypervisor.api.utils.Interruptible
+import wh.vm.bytecode.*
+import wh.vm.bytecode.Function
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
@@ -35,14 +35,14 @@ class VM(
 
     }
 
-    private val hypervisorService = HypervisorService(this)
+    private val hypervisorService = HypervisorService(socketPort, this)
 
     private var state = State()
 
     private val lock = ReentrantLock()
 
     init {
-        // find main function
+        // find wh.vm.main function
         val funEntry =
             constantPool.firstOrNull {
                 if (it.type == ConstantPoolEntry.Type.FUNCTION) {

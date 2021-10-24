@@ -1,6 +1,6 @@
-package bytecode
+package wh.vm.bytecode
 
-import dev.OnlyForDevTime
+import wh.vm.dev.OnlyForDevTime
 import wh.hypervisor.api.utils.*
 
 abstract class ConstantPoolEntry(

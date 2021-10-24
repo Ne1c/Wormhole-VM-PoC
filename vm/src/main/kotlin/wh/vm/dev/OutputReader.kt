@@ -1,9 +1,9 @@
-package dev
+package wh.vm.dev
 
-import bytecode.*
 import wh.hypervisor.api.utils.ByteArrayNavigator
 import wh.hypervisor.api.utils.INT_16_BITS_ARRAY_SIZE
 import wh.hypervisor.api.utils.INT_32_BITS_ARRAY_SIZE
+import wh.vm.bytecode.*
 import java.io.File
 import java.io.FileInputStream
 
