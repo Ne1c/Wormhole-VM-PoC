@@ -1,10 +1,10 @@
-import wh.vm.bytecode.ConstantPoolEntry
-import wh.vm.bytecode.Instruction
-import wh.vm.bytecode.OpCode
-import wh.vm.dev.BytecodeFile
-import wh.vm.dev.OutputWriter
-import wh.vm.vm.MAJOR_VERSION
-import wh.vm.vm.MINOR_VERSION
+import x1.vm.bytecode.ConstantPoolEntry
+import x1.vm.bytecode.Instruction
+import x1.vm.bytecode.OpCode
+import x1.vm.dev.BytecodeFile
+import x1.vm.dev.OutputWriter
+import x1.vm.vm.MAJOR_VERSION
+import x1.vm.vm.MINOR_VERSION
 
 fun main(args: Array<String>) {
     writeSimpleProgram()

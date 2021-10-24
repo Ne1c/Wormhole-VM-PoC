@@ -1,4 +1,4 @@
-rootProject.name = "Wormhole_VM"
+rootProject.name = "X1-VM"
 
 include("vm")
 include("hypervisor_api")

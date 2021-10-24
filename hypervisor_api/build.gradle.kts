@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "wh.vm"
+group = "x1.vm"
 version = "1.0-SNAPSHOT"
 
 repositories {
