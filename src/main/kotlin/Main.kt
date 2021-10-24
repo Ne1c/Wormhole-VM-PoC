@@ -8,13 +8,12 @@ import vm.VM
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
-    writeSimpleProgram()
+    val executablePath = args[0]
+    val socketPort = args[1].toInt()
 
-    val bytecodeFile = readSimpleProgram()
+    val bytecodeFile = loadProgram(executablePath)
 
-    println(bytecodeFile)
-
-    val vm = VM(bytecodeFile.instructions, bytecodeFile.constantPool)
+    val vm = VM(bytecodeFile.instructions, bytecodeFile.constantPool, socketPort)
 
     while (!vm.isHalted()) {
         vm.execute(vm.fetchInstruction())
@@ -37,6 +36,6 @@ fun writeSimpleProgram() {
     OutputWriter.write(bytecodeFile)
 }
 
-fun readSimpleProgram(): BytecodeFile {
-    return OutputReader.read("test.o")
+fun loadProgram(path: String): BytecodeFile {
+    return OutputReader.read(path)
 }

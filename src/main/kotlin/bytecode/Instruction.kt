@@ -1,6 +1,6 @@
 package bytecode
 
-import utils.toByteArray
+import wh.hypervisor.api.utils.toByteArray
 
 enum class OpCode {
     OP_CALL,

@@ -1,7 +1,7 @@
 package bytecode
 
 import dev.OnlyForDevTime
-import utils.*
+import wh.hypervisor.api.utils.*
 
 abstract class ConstantPoolEntry(
     val type: Type,

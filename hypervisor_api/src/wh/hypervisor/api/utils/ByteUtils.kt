@@ -1,4 +1,4 @@
-package utils
+package wh.hypervisor.api.utils
 
 const val INT_8_BITS_ARRAY_SIZE = 1
 const val INT_16_BITS_ARRAY_SIZE = 2

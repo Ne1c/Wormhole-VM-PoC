@@ -1,7 +1,7 @@
 package dev
 
-import utils.INT_16_BITS_ARRAY_SIZE
-import utils.toByteArray
+import wh.hypervisor.api.utils.INT_16_BITS_ARRAY_SIZE
+import wh.hypervisor.api.utils.toByteArray
 import vm.MAJOR_VERSION
 import vm.MINOR_VERSION
 import java.io.FileOutputStream
