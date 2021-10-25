@@ -1,6 +1,5 @@
 package x1.vm.vm
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -12,6 +11,7 @@ import x1.hypervisor.api.SyncDataResponse
 import x1.hypervisor.api.utils.Interruptible
 import x1.vm.bytecode.*
 import x1.vm.bytecode.Function
+import x1.vm.serializer.StackSerializer
 import java.lang.Thread.sleep
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -23,17 +23,17 @@ class VM(
     socketPort: Int
 ) : Interruptible {
     @Serializable
-    private class State {
+    internal class State {
         var ip = 0
         var sp = 0
 
         // base purpose registers
         val bpr = Array<TValue?>(256) { null }
 
-        @Contextual
+        @Serializable(with = StackSerializer::class)
         val stack = Stack<StackFrame>()
-        var halted = false
 
+        var halted = false
     }
 
     private val hypervisorService = HypervisorService(socketPort, this)

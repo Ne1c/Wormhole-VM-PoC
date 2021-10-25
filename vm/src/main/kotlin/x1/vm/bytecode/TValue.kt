@@ -1,10 +1,10 @@
 package x1.vm.bytecode
 
 import kotlinx.serialization.Serializable
-import x1.hypervisor.api.utils.INT_32_BITS_ARRAY_SIZE
 
 @Serializable
 sealed class TValue {
+    @Serializable
     class IntValue(val value: Int) : TValue() {
         fun sum(intValue: IntValue): IntValue {
             return IntValue(this.value + intValue.value)
@@ -14,36 +14,21 @@ sealed class TValue {
             return IntValue(this.value - intValue.value)
         }
 
-        override fun sizeInBytes(): Int = INT_32_BITS_ARRAY_SIZE
-
-//        override fun serialize(): ByteArray = value.toByteArray(INT_32_BITS_ARRAY_SIZE)
-
         override fun toString(): String {
             return "IntValue(value = $value)"
         }
     }
 
+    @Serializable
     class DoubleValue(val value: Double) : TValue() {
-        override fun sizeInBytes(): Int = Double.SIZE_BYTES
-
-//        override fun serialize(): ByteArray {
-//            TODO("Not yet implemented")
-//        }
-
         override fun toString(): String {
             return "DoubleValue(value = $value)"
         }
     }
 
+    @Serializable
     class StringValue(val value: String) : TValue() {
-        // size of string + bytes
-        private val _sizeInBytes = 2 + value.length
-
-        override fun sizeInBytes(): Int = _sizeInBytes
-
-//        override fun serialize(): ByteArray = value.toByteArray()
-
-        override fun toString(): String {
+       override fun toString(): String {
             return "StringValue(value = $value)"
         }
     }
@@ -53,6 +38,4 @@ sealed class TValue {
     fun asDouble() = this as DoubleValue
 
     fun asString() = this as StringValue
-
-    open fun sizeInBytes(): Int = 0
 }

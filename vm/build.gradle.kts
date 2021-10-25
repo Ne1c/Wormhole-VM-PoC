@@ -15,6 +15,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(project(":hypervisor_api"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+    testImplementation("junit:junit:4.13.1")
 }
 
 application {

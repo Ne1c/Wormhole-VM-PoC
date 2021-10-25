@@ -1,5 +1,6 @@
 package x1.hypervisor.api
 
+import x1.hypervisor.api.utils.toByteArray
 import x1.hypervisor.api.utils.toInt
 import java.io.InputStream
 import java.io.OutputStream
@@ -55,7 +56,7 @@ class Reader {
 
             dataArray = ByteArray(length)
 
-            buffer.copyInto(dataArray, 0, 4)
+            buffer.copyInto(dataArray, 0, 4, read)
 
             consumedBytes = read - 4
         } else {
@@ -92,6 +93,8 @@ class Reader {
 
 class Writer(private val outputStream: OutputStream) {
     fun write(command: Command) {
-        outputStream.write(command.toByteArray())
+        val dataByteArray = command.toByteArray()
+        val sizeByteArray = dataByteArray.size.toByteArray()
+        outputStream.write(sizeByteArray + dataByteArray)
     }
 }

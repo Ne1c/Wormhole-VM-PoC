@@ -64,7 +64,7 @@ fun main(args: Array<String>) {
 
                 vms[idCounter] = VMInstance(process, socketPort)
 
-                println("VM started with PID $idCounter")
+                println("VM started with PID $idCounter on the port $socketPort")
             }
             STOP_CMD -> {
                 val arg1 = command[1]
@@ -87,23 +87,23 @@ fun main(args: Array<String>) {
 
             }
             SYNC_CMD -> {
-                val whoPid = command[1].toInt()
-                val whomPid = command[2].toInt()
+                val whoPort = command[1].toInt()
+                val whomPort = command[2].toInt()
 
-                val whoProcess = vms[whoPid] ?: run {
-                    println("Who PID not found")
-                    return
-                }
-                val whomProcess = vms[whomPid] ?: run {
-                    println("Whom PID not found")
-                    return
-                }
+//                val whoProcess = vms[whoPid] ?: run {
+//                    println("Who PID not found")
+//                    return
+//                }
+//                val whomProcess = vms[whomPid] ?: run {
+//                    println("Whom PID not found")
+//                    return
+//                }
 
-                println("Sync $whoPid with $whomPid")
+                println("Sync $whoPort with $whomPort")
 
                 val reader = Reader()
 
-                val whomSocket = Socket("localhost", whomProcess.socketPort)
+                val whomSocket = Socket("localhost", whomPort)
                 val whomWriter = Writer(whomSocket.getOutputStream())
 
                 whomWriter.write(RequestSyncCommand())
@@ -117,10 +117,10 @@ fun main(args: Array<String>) {
 
                 whomSocket.close()
 
-                println("Sync data received from $whomPid")
-                println("Transmitting to $whoPid...")
+                println("Sync data received from $whomPort")
+                println("Transmitting to $whoPort...")
 
-                val whoSocket = Socket("localhost", whoProcess.socketPort)
+                val whoSocket = Socket("localhost", whoPort)
                 val whoWriter = Writer(whoSocket.getOutputStream())
 
                 whoWriter.write(dataResponse)
