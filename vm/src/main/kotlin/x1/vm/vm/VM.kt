@@ -12,6 +12,7 @@ import x1.hypervisor.api.SyncDataResponse
 import x1.hypervisor.api.utils.Interruptible
 import x1.vm.bytecode.*
 import x1.vm.bytecode.Function
+import java.lang.Thread.sleep
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
@@ -19,7 +20,7 @@ import java.util.concurrent.locks.ReentrantLock
 class VM(
     private val instructions: List<Instruction>,
     private val constantPool: List<ConstantPoolEntry>,
-    private val socketPort: Int
+    socketPort: Int
 ) : Interruptible {
     @Serializable
     private class State {
@@ -42,7 +43,7 @@ class VM(
     private val lock = ReentrantLock()
 
     init {
-        // find wh.vm.main function
+        // find main function
         val funEntry =
             constantPool.firstOrNull {
                 if (it.type == ConstantPoolEntry.Type.FUNCTION) {
@@ -87,6 +88,15 @@ class VM(
             OpCode.OP_PRINT -> println(state.bpr[instruction.src1])
             OpCode.OP_HALT -> state.halted = true
             OpCode.OP_CALL -> call(instruction.src1)
+            OpCode.OP_PAUSE -> {
+                val pause = (instruction.src1 shl 16 and 0xFF) or (instruction.src2 shl 8 and 0xFF) or (instruction.dst and 0xFF)
+                sleep(pause.toLong())
+
+                // Hack to test hypervisor
+                // Do jmp to IADD instruction
+
+                state.ip = 2
+            }
             OpCode.OP_RETURN -> TODO()
         }
 
@@ -122,12 +132,18 @@ class VM(
     }
 
     override fun interruption(reason: Command) {
+        println("Interrupted with $reason")
+
         lock.tryLock(0, TimeUnit.SECONDS)
 
         if (reason is RequestSyncCommand) {
-            hypervisorService.sendSyncData(serialize())
+            hypervisorService.sendSyncData(serialize().also {
+                println("Serialized state:\n$it")
+            })
         } else if (reason is SyncDataResponse) {
-            deserialize(String(reason.data))
+            deserialize(String(reason.data).also {
+                println("Deserialized state:\n$it")
+            })
         }
 
         lock.unlock()

@@ -9,7 +9,11 @@ enum class OpCode {
     OP_ILOAD,
     OP_IADD,
     OP_PRINT,
-    OP_HALT
+    OP_HALT,
+    // compare int less => src1 < src2; if true jmp into (ip + dst)
+    OP_ICMPL,
+    // pause for ms
+    OP_PAUSE
 }
 
 data class Instruction(

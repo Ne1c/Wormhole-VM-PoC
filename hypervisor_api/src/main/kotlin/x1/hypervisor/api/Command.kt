@@ -14,6 +14,10 @@ import java.io.OutputStream
 abstract class Command(val type: Type) {
     internal abstract fun toByteArray(): ByteArray
 
+    override fun toString(): String {
+        return "Command(type=$type)"
+    }
+
     enum class Type {
         REQUEST_SYNC,
         SYNC_DATA,
@@ -23,6 +27,7 @@ abstract class Command(val type: Type) {
 
 class RequestSyncCommand : Command(Type.REQUEST_SYNC) {
     override fun toByteArray(): ByteArray = byteArrayOf(type.ordinal.toByte())
+
 }
 
 class SyncDataResponse(val data: ByteArray) : Command(Type.SYNC_DATA) {
@@ -50,7 +55,7 @@ class Reader {
 
             dataArray = ByteArray(length)
 
-            buffer.copyInto(dataArray, 4)
+            buffer.copyInto(dataArray, 0, 4)
 
             consumedBytes = read - 4
         } else {

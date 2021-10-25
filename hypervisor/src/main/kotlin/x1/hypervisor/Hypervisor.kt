@@ -34,7 +34,8 @@ fun main(args: Array<String>) {
         println("Running in $runningIn")
     }
 
-    val vms = mutableListOf<VMInstance>()
+    val vms = hashMapOf<Int, VMInstance>()
+    var idCounter = 0
 
     while (true) {
         val line = readLine() ?: continue
@@ -45,7 +46,9 @@ fun main(args: Array<String>) {
                 val path = command[1]
                 val socketPort = getFreePort()
 
-                val logFile = File("process_${vms.size + 1}.log")
+                idCounter++
+
+                val logFile = File("process_$idCounter.log")
                 logFile.delete()
                 logFile.createNewFile()
 
@@ -59,24 +62,42 @@ fun main(args: Array<String>) {
                     .redirectError(logFile)
                     .start()
 
-                vms.add(VMInstance(process, socketPort))
+                vms[idCounter] = VMInstance(process, socketPort)
 
-                println("VM started with PID ${vms.size}")
+                println("VM started with PID $idCounter")
             }
             STOP_CMD -> {
-                val pid = command[1].toInt()
+                val arg1 = command[1]
 
-                vms[pid].process.destroy()
-                vms.removeAt(pid)
+                if (arg1 == "all") {
+                    vms.forEach {
+                        it.value.process.destroy()
 
-                println("VM with PID $pid stopped")
+                        println("VM with PID ${it.key} stopped")
+                    }
+                    vms.clear()
+                } else {
+                    val pid = command[1].toInt()
+
+                    vms[pid]?.process?.destroy()
+                    vms.remove(pid)
+
+                    println("VM with PID $pid stopped")
+                }
+
             }
             SYNC_CMD -> {
                 val whoPid = command[1].toInt()
                 val whomPid = command[2].toInt()
 
-                val whoProcess = vms[whoPid]
-                val whomProcess = vms[whomPid]
+                val whoProcess = vms[whoPid] ?: run {
+                    println("Who PID not found")
+                    return
+                }
+                val whomProcess = vms[whomPid] ?: run {
+                    println("Whom PID not found")
+                    return
+                }
 
                 println("Sync $whoPid with $whomPid")
 
