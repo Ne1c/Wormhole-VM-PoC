@@ -1,10 +1,9 @@
 package x1.hypervisor.api.server
 
-import x1.hypervisor.api.utils.Interruptible
 import x1.hypervisor.api.Reader
 import x1.hypervisor.api.SyncDataResponse
-import x1.hypervisor.api.SyncFinished
 import x1.hypervisor.api.Writer
+import x1.hypervisor.api.utils.Interruptible
 import java.net.ServerSocket
 
 class HypervisorServerThread(
@@ -17,26 +16,26 @@ class HypervisorServerThread(
     override fun run() {
         val serverSocket = ServerSocket(socketPort)
 
+        println("Hypervisor server started on the $socketPort port")
+
         while (true) {
-            val socket = serverSocket.accept()
+            try {
+                val socket = serverSocket.accept()
 
-            writer = Writer(socket.getOutputStream())
+                writer = Writer(socket.getOutputStream())
 
-            var closed = false
+                do {
+                    while (!reader.read(socket.getInputStream())) { }
 
-            do {
-                if (reader.read(socket.getInputStream())) {
                     val command = reader.parse()
 
-                    if (command is SyncFinished) {
-                        closed = true
-                    } else {
-                        interruptible.interruption(command)
-                    }
-                }
-            } while (closed)
+                    interruptible.interruption(command)
+                } while (socket.isClosed)
 
-            socket.close()
+                socket.close()
+            } catch (e: Exception) {
+                System.err.println("Hypervisor server exception occurred on the $socketPort port; e = $e")
+            }
         }
     }
 

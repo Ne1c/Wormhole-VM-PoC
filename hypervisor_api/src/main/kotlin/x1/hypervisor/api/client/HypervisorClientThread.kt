@@ -12,25 +12,30 @@ class HypervisorClientThread(
     private var finished = false
 
     override fun run() {
-        val socket = Socket("localhost", socketPort)
-        val writer = Writer(socket.getOutputStream())
+        try {
+            val socket = Socket("localhost", socketPort)
 
-        writer.write(RequestSyncCommand())
+            println("Hypervisor client started on the $socketPort port")
 
-        while (reader.read(socket.getInputStream())) {
+            val writer = Writer(socket.getOutputStream())
+
+            writer.write(RequestSyncCommand())
+
+            while (reader.read(socket.getInputStream())) {
+            }
+
+            val command = reader.parse()
+
+            if (command is SyncDataResponse) {
+                interruptible.interruption(command)
+            }
+
+            socket.close()
+
+            finished = true
+        } catch (e: Exception) {
+            System.err.println("Hypervisor client exception occurred on the $socketPort port; e = $e")
         }
-
-        val command = reader.parse()
-
-        if (command is SyncDataResponse) {
-            interruptible.interruption(command)
-        }
-
-        writer.write(SyncFinished())
-
-        socket.close()
-
-        finished = true
     }
 
     fun isFinished() = finished

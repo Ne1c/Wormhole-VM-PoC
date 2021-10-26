@@ -3,17 +3,57 @@ package x1.vm.bytecode
 import x1.hypervisor.api.utils.toByteArray
 
 enum class OpCode {
+    /** Function related operations */
     OP_CALL,
     OP_RETURN,
-    OP_ICONST,
-    OP_ILOAD,
-    OP_IADD,
-    OP_PRINT,
+
+    /** Binary operations */
+    OP_ADD,
+    OP_SUB,
+    OP_MUL,
+    OP_MOD,
+    OP_POW,
+    OP_DIV,
+    /* Bit-wise AND operator */
+    OP_BAND,
+    /* Bit-wise OR operator */
+    OP_BOR,
+    /* Bit-wise XOR operator */
+    OP_BXOR,
+    /* Shift bits left */
+    OP_SHL,
+    /* Shift bits right */
+    OP_SHR,
+
+    /** Unary operations */
+    /* Unary minus */
+    OP_UNM,
+    /* Bit-wise NOT operator */
+    OP_BNOT,
+    /* Logical NOT operator */
+    OP_NOT,
+
+    /** Conditional operations */
+    /* Equal */
+    OP_EQ,
+    /* Less Than */
+    OP_LT,
+    /* Less Equal */
+    OP_LE,
+
+    /** Other operations */
+    /* Loads Constant from Constant Pool into register */
+    OP_LOADC,
+    /* Jumps to specific instruction */
+    OP_JMP,
+    /* Designates program end */
     OP_HALT,
-    // compare int less => src1 < src2; if true jmp into (ip + dst)
-    OP_ICMPL,
-    // pause for ms
-    OP_PAUSE
+
+    /** DEBUG operations */
+    /* Does a delay on specific time in ms */
+    OP_PAUSE,
+    /* Prints specific register into default output */
+    OP_PRINT
 }
 
 data class Instruction(

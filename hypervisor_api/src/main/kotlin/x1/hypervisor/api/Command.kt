@@ -21,8 +21,7 @@ abstract class Command(val type: Type) {
 
     enum class Type {
         REQUEST_SYNC,
-        SYNC_DATA,
-        SYNC_FINISHED
+        SYNC_DATA
     }
 }
 
@@ -33,10 +32,6 @@ class RequestSyncCommand : Command(Type.REQUEST_SYNC) {
 
 class SyncDataResponse(val data: ByteArray) : Command(Type.SYNC_DATA) {
     override fun toByteArray(): ByteArray = byteArrayOf(type.ordinal.toByte()) + data
-}
-
-class SyncFinished : Command(Type.SYNC_FINISHED) {
-    override fun toByteArray(): ByteArray = byteArrayOf(type.ordinal.toByte())
 }
 
 class Reader {
@@ -60,11 +55,10 @@ class Reader {
 
             consumedBytes = read - 4
         } else {
-            buffer.copyInto(dataArray, destinationOffset = consumedBytes)
+            buffer.copyInto(dataArray, destinationOffset = consumedBytes, 0, read)
 
             consumedBytes += read
         }
-
 
         return consumedBytes == dataArray.size
     }
@@ -77,9 +71,6 @@ class Reader {
             Command.Type.SYNC_DATA -> {
                 SyncDataResponse(dataArray.copyOfRange(1, dataArray.size))
             }
-            Command.Type.SYNC_FINISHED -> {
-                SyncFinished()
-            }
         }.apply {
             reset()
         }
@@ -88,6 +79,7 @@ class Reader {
     private fun reset() {
         dataArray = ByteArray(0)
         consumedBytes = 0
+        reset = true
     }
 }
 
@@ -96,5 +88,6 @@ class Writer(private val outputStream: OutputStream) {
         val dataByteArray = command.toByteArray()
         val sizeByteArray = dataByteArray.size.toByteArray()
         outputStream.write(sizeByteArray + dataByteArray)
+        outputStream.flush()
     }
 }

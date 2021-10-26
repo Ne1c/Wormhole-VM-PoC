@@ -75,10 +75,9 @@ class VM(
         lock.lock()
 
         when (instruction.opcode) {
-            OpCode.OP_ICONST -> {
-                val value = (instruction.src1 shl 8) or instruction.src2
-
-                state.bpr[instruction.dst] = TValue.IntValue(value)
+            OpCode.OP_LOADC -> {
+                val constantPoolIndex = (instruction.src1 shl 8) or instruction.src2
+                state.stack[state.sp].registers[instruction.dst] = constantPool[constantPoolIndex]
             }
             OpCode.OP_ILOAD -> state.bpr[instruction.dst] = constantPool[instruction.src1].asIntEntry().value
             OpCode.OP_IADD -> {
@@ -134,7 +133,7 @@ class VM(
     override fun interruption(reason: Command) {
         println("Interrupted with $reason")
 
-        lock.tryLock(0, TimeUnit.SECONDS)
+        lock.lock()
 
         if (reason is RequestSyncCommand) {
             hypervisorService.sendSyncData(serialize().also {
