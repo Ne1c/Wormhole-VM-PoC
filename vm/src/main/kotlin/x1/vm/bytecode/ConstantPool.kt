@@ -105,3 +105,11 @@ class StringEntry private constructor(
         return byteArray
     }
 }
+
+fun ConstantPoolEntry.toTValue(): TValue {
+    return when (this) {
+        is IntEntry -> this.value
+        is StringEntry -> TValue.StringValue(this.string)
+        else -> throw java.lang.IllegalStateException("Impossible to cast to TValue")
+    }
+}

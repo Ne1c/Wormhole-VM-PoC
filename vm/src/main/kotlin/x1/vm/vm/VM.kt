@@ -14,7 +14,6 @@ import x1.vm.bytecode.Function
 import x1.vm.serializer.StackSerializer
 import java.lang.Thread.sleep
 import java.util.*
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 
 class VM(
@@ -23,7 +22,7 @@ class VM(
     socketPort: Int
 ) : Interruptible {
     @Serializable
-    internal class State {
+     class State {
         var ip = 0
         var sp = 0
 
@@ -37,10 +36,9 @@ class VM(
     }
 
     private val hypervisorService = HypervisorService(socketPort, this)
-
-    private var state = State()
-
     private val lock = ReentrantLock()
+
+    var state = State()
 
     init {
         // find main function
@@ -77,7 +75,7 @@ class VM(
         when (instruction.opcode) {
             OpCode.OP_LOADC -> {
                 val constantPoolIndex = (instruction.src1 shl 8) or instruction.src2
-                state.stack[state.sp].registers[instruction.dst] = constantPool[constantPoolIndex]
+                state.stack[state.sp].registers[instruction.dst] = constantPool[constantPoolIndex].toTValue()
             }
             OpCode.OP_ILOAD -> state.bpr[instruction.dst] = constantPool[instruction.src1].asIntEntry().value
             OpCode.OP_IADD -> {
@@ -148,3 +146,4 @@ class VM(
         lock.unlock()
     }
 }
+

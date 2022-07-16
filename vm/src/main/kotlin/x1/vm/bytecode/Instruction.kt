@@ -53,7 +53,11 @@ enum class OpCode {
     /* Does a delay on specific time in ms */
     OP_PAUSE,
     /* Prints specific register into default output */
-    OP_PRINT
+    OP_PRINT,
+
+    /** Int instructions */
+    OP_ILOAD,
+    OP_IADD
 }
 
 data class Instruction(
